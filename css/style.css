@@ -1,0 +1,121 @@
+* {  margin: 0;  padding: 0;  }
+
+body {
+  height: 100%;
+}
+
+.showcase {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: url('../img/back.png') center;
+  height: 330px;
+  text-align: center;
+}
+
+.budget {  margin-top: 50px;  }
+.budget p {  font-size: 34px;  margin-top: 20px;  }
+
+.income, .expenses {
+  display: grid;
+  margin: auto;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 360px;
+  height: 36px;
+  font-size: 20px;
+  padding-top: 10px;
+}
+
+.income {   
+  background: green;  
+  color: white;
+  margin-top: -20px;
+}
+
+.expenses { background: orangered;  margin-top: -40px;  }
+#text {  text-align: left;  margin-left: 15px;  }
+#percentage {  padding-right: 5px;  }
+
+#in-total, #ex-total, #percentage {
+  text-align: right;
+  margin-right: 10px;
+}
+
+.data-entry {
+  background: rgb(209, 231, 166);
+  height: 56px;
+}
+
+.entry-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  width: 600px;
+}
+
+.description:focus, #type:focus,
+.amount:focus, .btn-process:focus { outline: none }
+.description {  width: 280px; }
+.amount {  width: 120px;  }
+
+.description, #type, .amount, .btn-process {
+  font-size: 16px;
+  padding: 5px;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+#type {
+  margin-left: 16px;
+  width: 50px;
+  font-size: 20px;
+}
+
+.btn-process {
+  padding: 5px 20px;
+  margin-left: 16px;
+  border-radius: 10px;
+}
+
+.btn-process:hover {  background: yellow; }
+
+.info-table {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;   
+  min-height: 500px;
+  justify-items: center;
+}
+
+.info-table h2 {
+  margin: 40px 0 10px 0 ;
+}
+
+.in-list, .ex-list {
+  position: absolute;
+  width: 400px;
+  height: 100%;
+}
+
+.in-list {
+  right: 52%;
+}
+
+.ex-list {
+  left: 52%;
+}
+
+footer {
+  background: gray;
+  color: black;
+  padding: 18px 0;
+  letter-spacing: 1.5;
+  font-size: 24px;
+  text-align: center;
+}
+
+footer span {  color: orangered;  font-weight: bold; }
+
+
+
+

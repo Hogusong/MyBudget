@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="css/style.css">
+  <title>My Budget</title>
+</head>
+<body>
+  <section class="showcase">
+    <div class="budget">
+      <h2>Available Budget in <span class="month"></span></h2>
+      <p id="budget">0.00</p>
+    </div>
+    <div class="income">
+      <p id="text">Income</p>
+      <p id="in-total">0.00</p>
+      <p>&nbsp;</p>
+    </div>
+    <div class="expenses">
+      <p id="text">Expenses</p>
+      <p id="ex-total">0.00</p>
+      <p id="percentage">00.0%</p>
+    </div>
+  </section>
+
+  <section class="data-entry">
+    <div class="entry-container">
+      <input type="text" class="description" placeholder="Description">
+      <select name="" id="type">
+        <option value="inc" selected>+</option>
+        <option value="exp">-</option>
+      </select>
+      <input class="amount" type="number" min=0 placeholder="amount">
+      <button class="btn-process"><i class="ion-checkmark-round"></i></button>
+    </div>
+  </section>
+
+  <section class="info-table">
+    <div class="in-list">
+      <h2 class="list-header">Income</h2><hr>
+      <div class="income-list">
+
+      </div>
+    </div>
+    <div class="ex-list">
+      <h2 class="list-header">Expenses</h2><hr>
+      <div class="expenses-list">
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>G</span>od<span>B</span>less<span>U</span> Web Services &copy; 2018     
+  </footer>
+
+  <script src="src/budget.js"></script>
+</body>
+</html>
