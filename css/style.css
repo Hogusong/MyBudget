@@ -1,9 +1,5 @@
 * {  margin: 0;  padding: 0;  }
 
-body {
-  height: 100%;
-}
-
 .showcase {
   display: grid;
   grid-template-columns: 1fr;
@@ -87,23 +83,18 @@ body {
   justify-items: center;
 }
 
-.info-table h2 {
-  margin: 40px 0 10px 0 ;
-}
+.info-table h2 {  margin: 40px 0 10px 0 ; }
 
-.in-list, .ex-list {
+.in-table, .ex-table {
   position: absolute;
   width: 400px;
   height: 100%;
 }
 
-.in-list {
-  right: 52%;
-}
-
-.ex-list {
-  left: 52%;
-}
+.in-table {  right: 52%;  }
+.ex-table {  left: 52%; }
+.in-table h2 {  color: green;  }
+.ex-table h2 {  color: orangered; }
 
 footer {
   background: gray;
