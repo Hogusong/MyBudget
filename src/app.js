@@ -104,6 +104,31 @@ var UIController = (function () {
     return month + ', ' + year;
   };
 
+  var formatValue = function (value, type) {
+    //  fix the number with 2 decimal point and split it by '.'
+    var numSplit = value.toFixed(2).split('.');
+
+    //  change format : 12345678 => 12,345,678
+    var x = numSplit[0];
+    var num ;
+    if (x.length > 3) {
+      if (x.length % 3 === 0){
+          num = x.substr(0, 3);
+      } else {
+          num = x.substr(0, (x.length % 3));
+      }
+    } else {
+        num = x;
+    }
+    x = x.substr(num.length, x.length);
+    while (x.length > 0) {
+        num = num + ',' + x.substr(0, 3);
+        x = x.substr(3, x.length);
+    };    
+
+    return type + num + '.' + numSplit[1]; 
+  }
+
   return {
     getInput: function () {
       return {
@@ -121,18 +146,22 @@ var UIController = (function () {
       var budget = in_total - ex_total;
       var percentage = '----';
       if (in_total > 0) {
-        percentage = Math.round(ex_total/in_total * 100 );
+        percentage = (ex_total/in_total * 100).toFixed(2);
       }
       DOMstring.month.textContent = getMonth();
-      DOMstring.budget.innerHTML = budget;
-      DOMstring.inTotal.innerHTML = in_total;
-      DOMstring.exTotal.innerHTML = ex_total;
-      DOMstring.percentage.innerHTML = percentage;
+      if (budget < 0) {
+        DOMstring.budget.innerHTML = formatValue(-budget, '- ');
+      } else {
+        DOMstring.budget.innerHTML = formatValue(budget, '+ ');
+      }
+      DOMstring.inTotal.innerHTML = formatValue(in_total, '+ ');
+      DOMstring.exTotal.innerHTML = formatValue(ex_total, '- ');
+      DOMstring.percentage.innerHTML = percentage + '%';
     }
   }
 })();
 
-// Grobal App Controler
+// Global App Controler
 var Controller = (function (UICtrl, DataCtrl) {
   var setupEvents = function () {
 
@@ -156,7 +185,7 @@ var Controller = (function (UICtrl, DataCtrl) {
 
   return {
     start: function () {
-      UICtrl.showBudget(10,0);
+      UICtrl.showBudget(10525, 9875.75);
       setupEvents();
     }
   }
