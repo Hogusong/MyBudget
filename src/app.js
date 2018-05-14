@@ -1,4 +1,4 @@
-var DOM = {
+var DOMstring = {
   month: document.getElementById('month'),
   budget: document.getElementById('budget'),
   inTotal: document.getElementById('in-total'),
@@ -94,10 +94,72 @@ var DataController = (function () {
   }
 })();
 
-var UIController = function () {
+var UIController = (function () {
+  var getMonth = function () {
+    var now, year, month, months;
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    now = new Date();
+    year = now.getFullYear();
+    month = months[now.getMonth()];
+    return month + ', ' + year;
+  };
 
-}
+  return {
+    getInput: function () {
+      return {
+        type: DOMstring.type.value,
+        desc: DOMstring.desc.value,
+        value: parseFloat(DOMstring.value.value)
+      }
+    },
 
-var Controll = function (UICtrl, DataCtrl) {
+    addListItem: function (obj, type) {
 
-}(UIController, DataController)
+    },
+
+    showBudget: function (in_total, ex_total) {
+      var budget = in_total - ex_total;
+      var percentage = '----';
+      if (in_total > 0) {
+        percentage = Math.round(ex_total/in_total * 100 );
+      }
+      DOMstring.month.textContent = getMonth();
+      DOMstring.budget.innerHTML = budget;
+      DOMstring.inTotal.innerHTML = in_total;
+      DOMstring.exTotal.innerHTML = ex_total;
+      DOMstring.percentage.innerHTML = percentage;
+    }
+  }
+})();
+
+// Grobal App Controler
+var Controller = (function (UICtrl, DataCtrl) {
+  var setupEvents = function () {
+
+  };
+
+  var updateData = function () {
+
+  };
+
+  var updatePercentages = function (type) {
+
+  };
+
+  var addNewItem = function () {
+
+  };
+
+  var deleteItem = function (event) {
+
+  };
+
+  return {
+    start: function () {
+      UICtrl.showBudget(10,0);
+      setupEvents();
+    }
+  }
+})(UIController, DataController);
+
+Controller.start();
