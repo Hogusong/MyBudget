@@ -7,7 +7,10 @@ var DOMstring = {
   desc: document.querySelector('.description'),
   type: document.getElementById('type'),
   amount: document.querySelector('.amount'),
-  process: document.querySelector('.btn-process')
+  process: document.querySelector('.btn-process'),
+  inList: document.querySelector('.income-list'),
+  exList: document.querySelector('.expenses-list'),
+  deleteBtn: document.querySelector('.info-table')
 }
 
 var DataController = (function () {
@@ -25,14 +28,14 @@ var DataController = (function () {
 
   Expense.prototype.calcPercentage = function () {
     if (data.totals.inc > 0) {
-      this.percentage = Math.round(this.value / data.totals.inc * 100);
+      this.percentage = Math.round(this.value / data.totals.inc * 10000) / 100;
     } else {
       this.percentage = -1;
     }
   };
 
   Expense.prototype.getPercentage = function () {
-    return this.percentage;
+    return this.percentage.toFixed(2);
   }
 
   var data = {
@@ -49,6 +52,7 @@ var DataController = (function () {
         newItem = new Income(ID, desc, value);
       } else {
         newItem = new Expense(ID, desc, value);
+        newItem.calcPercentage();
       }
 
       data.allItems[type].push(newItem);
@@ -75,14 +79,10 @@ var DataController = (function () {
     getTotals: function () {
       return data.totals;
     },
-
-    updateData: function () {
-
-    },
   
     updatePercentages: function () {
       data.allItems.exp.forEach(function (item) {
-        item.calcPercentage;
+        item.calcPercentage();
       });
     },
 
@@ -129,7 +129,13 @@ var UIController = (function () {
     };    
 
     return '$ ' + num + '.' + numSplit[1]; 
-  }
+  };
+
+  // var nodeListForEach = function (list, callback) {
+  //   for (var i = 0; i < list.length; i++){
+  //       callback(list[i], i);
+  //   }
+  // };
 
   return {
     getInput: function () {
@@ -140,8 +146,47 @@ var UIController = (function () {
       }
     },
 
-    addListItem: function (obj, type) {
+    addListItem: function (item, type) {
+      var html, newHtml, element;
+      console.log(item);
+      // Create HTML string with placeholder text
+      if (type === 'inc') {
+        element = '.income-list';
+        html =  '<div class="in-item clearfix" id="inc-%id%">' +
+                  '<div class="in-item-desc">%desc%</div>' +
+                  '<div class="in-item-value">%value%</div>' +
+                  '<button class="item-delete-btn">' +
+                    '<i class="ion-ios-close-outline"></i></button>' +
+                '</div>';
+      } else {
+        element = '.expenses-list';
+        html =  '<div class="ex-item clearfix" id="exp-%id%">' +
+                  '<div class="ex-item-desc">%desc%</div>' +
+                  '<div class="ex-item-value">%value%</div>' +
+                  '<div class="item-percentage">%ratio%</div>' +
+                  '<button class="item-delete-btn">' +
+                    '<i class="ion-ios-close-outline"></i></button>' +
+                '</div>';
+      }
+      // Replace the placeholder text with some actual data
+      newHtml = html.replace('%id%', item.id);
+      newHtml = newHtml.replace('%desc%', item.desc);
+      newHtml = newHtml.replace('%value%', formatValue(item.value));
+      if (type === 'exp') {
+        if (item.percentage > 0) {
+          newHtml = newHtml.replace('%ratio%', item.percentage + '%');
+        } else {
+          newHtml = newHtml.replace('%ratio%', '--- %');
+        }
+      }
 
+      // Insert the HTML into DOM
+      document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
+    },
+
+    deleteListItem: function(selectedID) {
+      var element = document.getElementById(selectedID);
+      element.parentNode.removeChild(element);
     },
 
     clearFields: function () {
@@ -166,11 +211,27 @@ var UIController = (function () {
       }
       DOMstring.inTotal.innerHTML = formatValue(in_total);
       DOMstring.exTotal.innerHTML = '- ' + formatValue(ex_total);
-      DOMstring.percentage.innerHTML = percentage + '%';
+      DOMstring.percentage.innerHTML = percentage + ' %';
     },
 
     displayPercentages: function (items) {
+      var fields = document.querySelectorAll('.item-percentage');
 
+      fields.forEach(function (field, i) {
+        if (items[i].percentage > 0) {
+          field.textContent = items[i].percentage + ' %';
+        } else {
+          field.textContent = '--- %';
+        }
+      });
+      //   nodeListForEach(fields, function (cur, index) {
+      //     if (items[index].percentage > 0) {
+      //       cur.textContent = items[index].percentage + ' %';
+      //     } else {
+      //       cur.textContent = '--- %';
+      //     }
+      //   });
+      // }
     }
   }
 })();
@@ -184,18 +245,18 @@ var Controller = (function (UICtrl, DataCtrl) {
         addNewItem();
       }
     })
+    // document.querySelector('.info-table').addEventListener('click', deleteItem);
+    DOMstring.deleteBtn.addEventListener('click', deleteItem);
   };
 
   var addNewItem = function () {
     var item = UICtrl.getInput();
     if (item.value > 0 && item.desc != '') {
       var newItem = DataCtrl.addItem(item.type, item.desc, item.value);
-
-      // UICtrl.addListItem(newItem, item.type);
+      
+      UICtrl.addListItem(newItem, item.type);
 
       UICtrl.clearFields();
-
-      DataCtrl.updateData() ;
 
       var totals = DataCtrl.getTotals();
       UICtrl.showBudget(totals.inc, totals.exp);
@@ -211,7 +272,27 @@ var Controller = (function (UICtrl, DataCtrl) {
   };
 
   var deleteItem = function (event) {
+    console.log(event.target.parentNode.parentNode.id);
+    var itemID, splitID, type, id;
+    itemID = event.target.parentNode.parentNode.id;
+    if (itemID) {
+      console.log("deleted: " + itemID);
+      splitID = itemID.split('-');
+      type = splitID[0];
+      id = parseInt(splitID[1]);
 
+      DataCtrl.deleteItem(type, id);
+      UICtrl.deleteListItem(itemID);
+
+      var totals = DataCtrl.getTotals();
+      UICtrl.showBudget(totals.inc, totals.exp);
+
+      if (type === "inc") {
+        DataCtrl.updatePercentages();
+        var items = DataCtrl.getExpensesArray();
+        UICtrl.displayPercentages(items);
+      } 
+    }
   };
 
   return {

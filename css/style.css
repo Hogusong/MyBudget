@@ -28,15 +28,19 @@
 }
 
 .expenses { background: orangered;  margin-top: -40px;  }
-#text {  text-align: left;  margin-left: 15px;  }
-#percentage {  padding-right: 5px;  }
+#text {  text-align: left;  margin-left: 30px;  }
 
-#in-total, #ex-total, #percentage {
+#in-total, #ex-total {
   text-align: right;
+  width: 150px;
 }
 
 #percentage {
-  margin-right: 10px;
+  text-align: right;
+  margin-right: 20px;
+  padding: 5px 5px 0 5px;
+  font-size: 14px;
+  color: darkgray
 }
 
 .data-entry {
@@ -53,7 +57,10 @@
 }
 
 .description:focus, #type:focus,
-.amount:focus, .btn-process:focus { outline: none }
+.amount:focus, .btn-process:focus { 
+  outline: none;
+  background: lemonchiffon;
+}
 .description {  width: 280px; }
 .amount {  width: 120px;  }
 
@@ -78,15 +85,19 @@
 
 .btn-process:hover {  background: yellow; }
 
+/******  Lists  ******/
 .info-table {
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;   
   min-height: 500px;
   justify-items: center;
+  overflow: auto;
 }
 
-.info-table h2 {  margin: 40px 0 10px 0 ; }
+.info-table h2 {  
+  margin: 40px 0 10px 0 ; 
+}
 
 .in-table, .ex-table {
   position: absolute;
@@ -99,9 +110,98 @@
 .in-table h2 {  color: green;  }
 .ex-table h2 {  color: orangered; }
 
+.in-item, .ex-item {
+  padding: 8px 0 24px 0;
+  border-bottom: 1px #e7e7e7 solid; 
+  display: block;
+}
+
+.in-item:nth-child(even) {  background: #f7f7f7; }
+.ex-item:nth-child(even) {  background: #f7f7f7; }
+
+.in-item-desc {  
+  float: left;
+  margin-left: 10px;  
+  width: 240px;
+  overflow: hidden;
+}
+
+.in-item-value {
+  float: left;
+  text-align: right;
+  width: 100px;
+}
+
+.item-delete-btn {
+  float: right;
+  font-size: 22px;
+  background: none;
+  border: none;
+  /* cursor: pointer; */
+  /* vertical-align: middle; */
+  line-height: 1;
+  margin-right: 10px;
+  margin-top: -2px;
+}
+
+.item-delete-btn:focus {  outline: none; }
+.item-delete-btn:hover {  color: red;  }
+.in-item:hover {  
+  color: green;  
+  font-weight: bold;
+}
+
+.ex-item:hover {
+  color: orangered;
+  font-weight: bold;
+}
+
+.ex-item-desc {  
+  float: left;
+  margin-left: 10px;  
+  width: 210px;
+  overflow: hidden;
+}
+
+.ex-item-value {
+  float: left;
+  text-align: right;
+  width: 90px;
+  transition: transform 0.3s;
+}
+
+.item-percentage {
+  float: left;
+  margin-left: 10px;
+  transition: transform 0.3s;
+  font-size: 11px;
+  background-color: #FFDAD9;
+  padding: 3px;
+  border-radius: 3px;
+  width: 38px;
+  text-align: center;
+}
+
+.income .item-value,
+.income .item-delete-btn {
+    color: #28B9B5;
+}
+
+.expenses .item-value,
+.expenses .item-percentage,
+.expenses .item-delete-btn {
+    color: #FF5049;
+}
+
+.item-delete {
+    float: right;
+}
+
 footer {
+  position: fixed;
   background: gray;
   color: black;
+  width: 100vw;
   padding: 18px 0;
   letter-spacing: 1.5;
   font-size: 24px;
