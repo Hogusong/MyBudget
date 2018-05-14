@@ -33,6 +33,9 @@
 
 #in-total, #ex-total, #percentage {
   text-align: right;
+}
+
+#percentage {
   margin-right: 10px;
 }
 

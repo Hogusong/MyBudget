@@ -4,6 +4,7 @@ var DOMstring = {
   inTotal: document.getElementById('in-total'),
   exTotal: document.getElementById('ex-total'),
   percentage: document.getElementById('percentage'),
+  desc: document.querySelector('.description'),
   type: document.getElementById('type'),
   amount: document.querySelector('.amount'),
   process: document.querySelector('.btn-process')
@@ -52,7 +53,8 @@ var DataController = (function () {
 
       data.allItems[type].push(newItem);
       data.totals[type] += value;
-      data.id[type] += 1
+      data.id[type] += 1;
+      return newItem;
     },
 
     deleteItem: function (type, id) {
@@ -74,6 +76,10 @@ var DataController = (function () {
       return data.totals;
     },
 
+    updateData: function () {
+
+    },
+  
     updatePercentages: function () {
       data.allItems.exp.forEach(function (item) {
         item.calcPercentage;
@@ -82,10 +88,6 @@ var DataController = (function () {
 
     getExpensesArray: function () {
       return data.allItems.exp;
-    },
-
-    getIncomeArray: function () {
-      return data.allItems.inc;
     },
 
     getData: function () {
@@ -104,7 +106,7 @@ var UIController = (function () {
     return month + ', ' + year;
   };
 
-  var formatValue = function (value, type) {
+  var formatValue = function (value) {
     //  fix the number with 2 decimal point and split it by '.'
     var numSplit = value.toFixed(2).split('.');
 
@@ -126,20 +128,28 @@ var UIController = (function () {
         x = x.substr(3, x.length);
     };    
 
-    return type + num + '.' + numSplit[1]; 
+    return '$ ' + num + '.' + numSplit[1]; 
   }
 
   return {
     getInput: function () {
       return {
         type: DOMstring.type.value,
-        desc: DOMstring.desc.value,
-        value: parseFloat(DOMstring.value.value)
+        desc: DOMstring.desc.value.trim(),
+        value: parseFloat(DOMstring.amount.value)
       }
     },
 
     addListItem: function (obj, type) {
 
+    },
+
+    clearFields: function () {
+      var fields = [DOMstring.desc, DOMstring.amount];
+      fields.forEach(function(field) {
+        field.value = '';
+      });
+      fields[0].focus();
     },
 
     showBudget: function (in_total, ex_total) {
@@ -150,13 +160,17 @@ var UIController = (function () {
       }
       DOMstring.month.textContent = getMonth();
       if (budget < 0) {
-        DOMstring.budget.innerHTML = formatValue(-budget, '- ');
+        DOMstring.budget.innerHTML = '- ' + formatValue(-budget);
       } else {
-        DOMstring.budget.innerHTML = formatValue(budget, '+ ');
+        DOMstring.budget.innerHTML = formatValue(budget);
       }
-      DOMstring.inTotal.innerHTML = formatValue(in_total, '+ ');
-      DOMstring.exTotal.innerHTML = formatValue(ex_total, '- ');
+      DOMstring.inTotal.innerHTML = formatValue(in_total);
+      DOMstring.exTotal.innerHTML = '- ' + formatValue(ex_total);
       DOMstring.percentage.innerHTML = percentage + '%';
+    },
+
+    displayPercentages: function (items) {
+
     }
   }
 })();
@@ -164,19 +178,36 @@ var UIController = (function () {
 // Global App Controler
 var Controller = (function (UICtrl, DataCtrl) {
   var setupEvents = function () {
-
-  };
-
-  var updateData = function () {
-
-  };
-
-  var updatePercentages = function (type) {
-
+    DOMstring.process.addEventListener('click', addNewItem);
+    document.addEventListener('keypress', function(event) {
+      if (event.keyCode === 13 || event.which === 13) {
+        addNewItem();
+      }
+    })
   };
 
   var addNewItem = function () {
+    var item = UICtrl.getInput();
+    if (item.value > 0 && item.desc != '') {
+      var newItem = DataCtrl.addItem(item.type, item.desc, item.value);
 
+      // UICtrl.addListItem(newItem, item.type);
+
+      UICtrl.clearFields();
+
+      DataCtrl.updateData() ;
+
+      var totals = DataCtrl.getTotals();
+      UICtrl.showBudget(totals.inc, totals.exp);
+
+      if (item.type === "inc") {
+        DataCtrl.updatePercentages();
+        var items = DataCtrl.getExpensesArray();
+        UICtrl.displayPercentages(items);
+      } 
+    } else {
+      alert('Invalid input. Check the description and the value amount.')
+    }
   };
 
   var deleteItem = function (event) {
@@ -185,7 +216,7 @@ var Controller = (function (UICtrl, DataCtrl) {
 
   return {
     start: function () {
-      UICtrl.showBudget(10525, 9875.75);
+      UICtrl.showBudget(0, 0);
       setupEvents();
     }
   }
